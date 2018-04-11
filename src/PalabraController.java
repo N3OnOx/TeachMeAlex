@@ -14,26 +14,34 @@ public class PalabraController {
         String line;
         String diccionario;
         System.out.print("Español --> ");
-        line = sc.nextLine();
-
-        if (!palabraController.existePesp(line)){
-            diccionario = "desp";
-            if (palabraController.existePDiccionario(diccionario,line)){
-                palabra.setEsp(line);
-                System.out.print("English --> ");
-                line = sc.nextLine();
-                diccionario = "ding";
+        line = sc.nextLine().toLowerCase();
+        if (line.startsWith("*")){
+            line = line.substring(1,line.length());
+            palabra.setEsp(line);
+            System.out.print("English --> ");
+            line = sc.nextLine().toLowerCase();
+            palabra.setIng(line);
+            this.palabraController.altaPalabra(palabra);
+        }else {
+            if (!palabraController.existePesp(line)) {
+                diccionario = "desp";
                 if (palabraController.existePDiccionario(diccionario, line)) {
-                    palabra.setIng(line);
-                    this.palabraController.altaPalabra(palabra);
-                }else{
-                    System.out.println("No existe esa palabra en ingles");
+                    palabra.setEsp(line);
+                    System.out.print("English --> ");
+                    line = sc.nextLine().toLowerCase();
+                    diccionario = "ding";
+                    if (palabraController.existePDiccionario(diccionario, line)) {
+                        palabra.setIng(line);
+                        this.palabraController.altaPalabra(palabra);
+                    } else {
+                        System.out.println("No existe esa palabra en ingles");
+                    }
+                } else {
+                    System.out.println("No existe esa palabra en español");
                 }
-            }else{
-                System.out.println("No existe esa palabra en español");
+            } else {
+                System.out.println("Ya existe esa palabra en nuestro vocabulario");
             }
-        }else{
-            System.out.println("Ya existe esa palabra en nuestro vocabulario");
         }
     }
     public void bajaPalabra(){
@@ -78,6 +86,8 @@ public class PalabraController {
                         if (!resp.equalsIgnoreCase(fallo.getIng())){
                             System.out.println("¡¡¡ERROR!!! Ingles --> "+fallo.getIng());
                             contFallos++;
+                        }else{
+                            fallos.remove(fallo);
                         }
                     }
                     if (contFallos != 0){
@@ -96,6 +106,20 @@ public class PalabraController {
             }else{
                 System.out.println("Hasta otra!");
             }
+        }
+    }
+    public void traductor(){
+        Scanner sc = new Scanner(System.in);
+        String line;
+        System.out.println("Dime una palabra: ");
+        line = sc.nextLine();
+        if (palabraController.existePalabra(line)){
+            System.out.println("******************************");
+            System.out.println("* Español --> "+palabraController.traductor(line).getEsp()+" *");
+            System.out.println("* Ingles --> "+palabraController.traductor(line).getIng()+" *");
+            System.out.println("******************************");
+        }else{
+            System.out.println("Esa palabra no está en nuestro vocabulario");
         }
     }
 }

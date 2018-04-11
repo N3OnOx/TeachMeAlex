@@ -19,18 +19,22 @@ public class Main {
                     palabraController.randomStudy();
                     break;
                 case 4:
+                    palabraController.traductor();
+                    break;
+                case 5:
                     System.out.println("Has elegido salir");
                     break;
                     default:
                         System.out.println("Opción inválida");
                         break;
             }
-        }while (opt != 4);
+        }while (opt != 5);
     }
     static void mostrarMenu(){
         System.out.println("1. Alta palabra");
         System.out.println("2. Baja palabra");
         System.out.println("3. Estudiar");
-        System.out.println("4. Salir");
+        System.out.println("4. Traductor");
+        System.out.println("5. Salir");
     }
 }

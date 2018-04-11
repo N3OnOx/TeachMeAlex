@@ -60,6 +60,22 @@ public class BDController {
 
         return palabras;
     }
+    public Palabra traductor(String palabra){
+        String sql = "select * from palabra where nEsp = '"+palabra+"' or nIng = '"+palabra+"'";
+        Palabra palabra1 = new Palabra();
+        try {
+            Statement ms = connection.createStatement();
+            ResultSet rs = ms.executeQuery(sql);
+            while (rs.next()){
+                palabra1.setEsp(rs.getString("nESP"));
+                palabra1.setIng(rs.getString("nIng"));
+            }
+            rs.close();
+        }catch (SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
+        return palabra1;
+    }
 
     public boolean existePesp(String palabra){
         boolean existe = true;
