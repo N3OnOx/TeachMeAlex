@@ -13,72 +13,86 @@ public class PalabraController {
         Palabra palabra = new Palabra();
         String line;
         String diccionario;
-        System.out.print("Español --> ");
-        line = sc.nextLine().toLowerCase();
-        if (line.startsWith("*")){
-            line = line.substring(1,line.length());
-            palabra.setEsp(line);
-            System.out.print("English --> ");
+        do {
+            System.out.print("Español --> ");
             line = sc.nextLine().toLowerCase();
-            palabra.setIng(line);
-            this.palabraController.altaPalabra(palabra);
-        }else {
-            if (!palabraController.existePesp(line)) {
-                diccionario = "desp";
-                if (palabraController.existePDiccionario(diccionario, line)) {
-                    palabra.setEsp(line);
-                    System.out.print("English --> ");
-                    line = sc.nextLine().toLowerCase();
-                    diccionario = "ding";
+            if (line.startsWith("*")) {
+                line = line.substring(1, line.length());
+                palabra.setEsp(line);
+                System.out.print("English --> ");
+                line = sc.nextLine().toLowerCase();
+                palabra.setIng(line);
+                this.palabraController.altaPalabra(palabra);
+            } else {
+                if (!palabraController.existePesp(line)) {
+                    diccionario = "desp";
                     if (palabraController.existePDiccionario(diccionario, line)) {
-                        palabra.setIng(line);
-                        this.palabraController.altaPalabra(palabra);
+                        palabra.setEsp(line);
+                        System.out.print("English --> ");
+                        line = sc.nextLine().toLowerCase();
+                        diccionario = "ding";
+                        if (palabraController.existePDiccionario(diccionario, line)) {
+                            palabra.setIng(line);
+                            this.palabraController.altaPalabra(palabra);
+                        } else {
+                            System.out.println("No existe esa palabra en ingles");
+                        }
                     } else {
-                        System.out.println("No existe esa palabra en ingles");
+                        System.out.println("No existe esa palabra en español");
                     }
                 } else {
-                    System.out.println("No existe esa palabra en español");
+                    System.out.println("Ya existe esa palabra en nuestro vocabulario");
                 }
-            } else {
-                System.out.println("Ya existe esa palabra en nuestro vocabulario");
             }
-        }
+        }while (!line.equalsIgnoreCase("-1"));
     }
     public void altaVerbo(){
         Scanner sc = new Scanner(System.in);
-        Palabra palabra = new Palabra();
+        Verbo verbo = new Verbo();
         String line;
         String diccionario;
-        System.out.print("Español --> ");
-        line = sc.nextLine().toLowerCase();
-        if (line.startsWith("*")){
-            line = line.substring(1,line.length());
-            palabra.setEsp(line);
-            System.out.print("English --> ");
+        do {
+            System.out.print("Español --> ");
             line = sc.nextLine().toLowerCase();
-            palabra.setIng(line);
-            this.palabraController.altaVerbo(palabra);
-        }else {
-            if (!palabraController.existePesp(line)) {
-                diccionario = "desp";
-                if (palabraController.existePDiccionario(diccionario, line)) {
-                    palabra.setEsp(line);
-                    System.out.print("English --> ");
-                    line = sc.nextLine().toLowerCase();
-                    diccionario = "ding";
+            if (line.startsWith("*")) {
+                line = line.substring(1, line.length());
+                verbo.setVerb(line);
+                System.out.print("Present --> ");
+                line = sc.nextLine().toLowerCase();
+                verbo.setPresent(line);
+                System.out.print("Past -- >");
+                line = sc.nextLine().toLowerCase();
+                verbo.setPast(line);
+                this.palabraController.altaVerbo(verbo);
+            } else {
+                if (!palabraController.existeVerbo(line)) {
+                    diccionario = "desp";
                     if (palabraController.existePDiccionario(diccionario, line)) {
-                        palabra.setIng(line);
-                        this.palabraController.altaVerbo(palabra);
+                        verbo.setVerb(line);
+                        System.out.print("Present --> ");
+                        line = sc.nextLine().toLowerCase();
+                        diccionario = "ding";
+                        if (palabraController.existePDiccionario(diccionario, line)) {
+                            verbo.setPresent(line);
+                            System.out.print("Past --> ");
+                            line = sc.nextLine().toLowerCase();
+                            if (palabraController.existePDiccionario(diccionario, line)){
+                                verbo.setPast(line);
+                                this.palabraController.altaVerbo(verbo);
+                            }else{
+                                System.out.println("No existe ese verbo en ingles");
+                            }
+                        } else {
+                            System.out.println("No existe ese verbo en ingles");
+                        }
                     } else {
-                        System.out.println("No existe ese verbo en ingles");
+                        System.out.println("No existe ese verbo en español");
                     }
                 } else {
-                    System.out.println("No existe ese verbo en español");
+                    System.out.println("Ya existe ese verbo en nuestro vocabulario de verbos");
                 }
-            } else {
-                System.out.println("Ya existe ese verbo en nuestro vocabulario de verbos");
             }
-        }
+        }while (!line.equalsIgnoreCase("-1"));
     }
     public void bajaPalabra(){
         Scanner sc = new Scanner(System.in);
@@ -96,18 +110,15 @@ public class PalabraController {
         String line;
         System.out.println("Dime una palabra o verbo: ");
         line = sc.nextLine();
-        int opt = 0;
         if (palabraController.existePalabra(line)){
-            opt = 1;
             System.out.println("******************************");
-            System.out.println("* Español --> "+palabraController.traductor(line,opt).getEsp()+" *");
-            System.out.println("* Ingles --> "+palabraController.traductor(line,opt).getIng()+" *");
+            System.out.println("* Español --> "+palabraController.traductorPalabra(line).getEsp()+" *");
+            System.out.println("* Ingles --> "+palabraController.traductorPalabra(line).getIng()+" *");
             System.out.println("******************************");
-        }else if (palabraController.existeVerbo(line)){
-            opt = 2;
             System.out.println("******************************");
-            System.out.println("* Español --> "+palabraController.traductor(line,opt).getEsp()+" *");
-            System.out.println("* Ingles --> "+palabraController.traductor(line,opt).getIng()+" *");
+            System.out.println("* Verbo --> "+palabraController.traductorVerbo(line).getVerb()+" *");
+            System.out.println("* Presente --> "+palabraController.traductorVerbo(line).getPresent()+" *");
+            System.out.println("* Pasado --> "+palabraController.traductorVerbo(line).getPast()+" *");
             System.out.println("******************************");
         }else{
             System.out.println("Esa palabra no está en nuestro vocabulario");
@@ -183,7 +194,7 @@ public class PalabraController {
         Scanner sc = new Scanner(System.in);
         String resp;
         boolean checkFallos = true;
-        ArrayList<Palabra> fallos = new ArrayList<>();
+        ArrayList<Verbo> fallos = new ArrayList<>();
         int contFallos = 0;
         long time_start;
         long time_end = 0;
@@ -191,14 +202,22 @@ public class PalabraController {
         long voca;
         long verb;
         time_start = System.currentTimeMillis();
-        for (Palabra palabra : this.palabraController.verbosRandom()) {
-            System.out.println("Español --> "+palabra.getEsp());
-            System.out.print("English --> ");
+        for (Verbo verbo : this.palabraController.verbosRandom()) {
+            System.out.println("Verbo --> "+verbo.getVerb());
+            System.out.print("Present --> ");
             resp = sc.nextLine();
-            if (!resp.equalsIgnoreCase(palabra.getIng())){
-                System.out.println("¡¡¡ERROR!!! Ingles --> "+palabra.getIng());
+            if (!resp.equalsIgnoreCase(verbo.getPresent())){
+                System.out.println("¡¡¡ERROR!!! Present --> "+verbo.getPresent());
                 contFallos++;
-                fallos.add(palabra);
+                fallos.add(verbo);
+            }else{
+                System.out.println("Past --> ");
+                resp = sc.nextLine();
+                if (!resp.equalsIgnoreCase(verbo.getPast())){
+                    System.out.println("¡¡¡ERROR!!! Past --> "+verbo.getPast());
+                    contFallos++;
+                    fallos.add(verbo);
+                }
             }
         }
         if (contFallos == 0){
@@ -210,13 +229,20 @@ public class PalabraController {
             if (resp.equalsIgnoreCase("si")){
                 do {
                     contFallos = 0;
-                    for (Palabra fallo : fallos) {
-                        System.out.println("Español ---> "+fallo.getEsp());
-                        System.out.print("English ---> ");
+                    for (Verbo fallo : fallos) {
+                        System.out.println("Verbo ---> " + fallo.getVerb());
+                        System.out.print("Present ---> ");
                         resp = sc.nextLine();
-                        if (!resp.equalsIgnoreCase(fallo.getIng())){
-                            System.out.println("¡¡¡ERROR!!! Ingles --> "+fallo.getIng());
+                        if (!resp.equalsIgnoreCase(fallo.getPresent())) {
+                            System.out.println("¡¡¡ERROR!!! Present --> " + fallo.getPresent());
                             contFallos++;
+                        } else {
+                            System.out.print("Past ---> ");
+                            resp = sc.nextLine();
+                            if (!resp.equalsIgnoreCase(fallo.getPast())) {
+                                System.out.println("¡¡¡ERROR!!! Past --> " + fallo.getPast());
+                                contFallos++;
+                            }
                         }
                     }
                     if (contFallos != 0){
