@@ -7,7 +7,6 @@ public class BDController {
     private PreparedStatement existePespDiccionario;
     private PreparedStatement existePingDiccionario;
     private PreparedStatement existePalabra;
-    private PreparedStatement existeVerbo;
 
     BDController(){
         try {
@@ -16,8 +15,6 @@ public class BDController {
             this.existePesp = connection.prepareStatement(SQLExistePesp);
             String SQLExistePalabra = "select * from palabra where nEsp = ? or nIng = ?";
             this.existePalabra = connection.prepareStatement(SQLExistePalabra);
-            String SQLExisteVerbo = "select * from verbos where verbEsp = ? or verbIng = ?";
-            this.existeVerbo = connection.prepareStatement(SQLExisteVerbo);
             String SQLExistePespDiccionario = "select * from desp where palabra = ?";
             this.existePespDiccionario = connection.prepareStatement(SQLExistePespDiccionario);
             String SQLExistePingDiccionario = "select * from ding where word = ?";
@@ -37,16 +34,6 @@ public class BDController {
             System.out.println("Error: "+e.getMessage());
         }
     }
-    public void altaVerbo(Palabra palabra){
-        String sql = "insert into verbos values ('"+palabra.getEsp()+"','"+palabra.getIng()+"')";
-        try {
-            Statement ms = this.connection.createStatement();
-            ms.executeUpdate(sql);
-            ms.close();
-        }catch (SQLException e){
-            System.out.println("Error "+e.getMessage());
-        }
-    }
     public void bajaPalabra(String palabra){
         String sql = "delete from palabra where nIng = '"+palabra+"' or nEsp = '"+palabra+"';";
         try {
@@ -57,17 +44,6 @@ public class BDController {
             System.out.println("Error: "+e.getMessage());
         }
     }
-    public void bajaVerbo(String palabra){
-        String sql = "delete from verbos where verbIng = '"+palabra+"' or verbEsp = '"+palabra+"';";
-        try {
-            Statement ms = connection.createStatement();
-            ms.executeUpdate(sql);
-            ms.close();
-        }catch (SQLException e){
-            System.out.println("Error : "+e.getMessage());
-        }
-    }
-
     public ArrayList<Palabra> palabrasRandom(){
         ArrayList<Palabra> palabras = new ArrayList<>();
         String sql = "select * from palabra order by rand()";
@@ -83,124 +59,6 @@ public class BDController {
         }
 
         return palabras;
-    }
-    public ArrayList<Palabra> verbosRandom(){
-        ArrayList<Palabra> palabras = new ArrayList<>();
-        String sql = "select * from verbos order by rand()";
-        try {
-            Statement ms = connection.createStatement();
-            ResultSet rs = ms.executeQuery(sql);
-            while (rs.next()){
-                palabras.add(new Palabra(rs.getString("verbEsp"), rs.getString("verbIng")));
-            }
-            rs.close();
-        }catch (SQLException e){
-            System.out.println("Error: "+e.getMessage());
-        }
-
-        return palabras;
-    }
-    public Palabra traductor(String palabra, int opt){
-        String sql = "select * from palabra where nEsp = '"+palabra+"' or nIng = '"+palabra+"'";
-        String sql2 = "select * from verbos where verbEsp = '"+palabra+"' or verbIng = '"+palabra+"'";
-        Palabra palabra1 = new Palabra();
-        if (opt == 1) {
-            try {
-                Statement ms = connection.createStatement();
-                ResultSet rs = ms.executeQuery(sql);
-                while (rs.next()) {
-                    palabra1.setEsp(rs.getString("nESP"));
-                    palabra1.setIng(rs.getString("nIng"));
-                }
-                rs.close();
-            } catch (SQLException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }else if (opt == 2) {
-            try {
-                Statement ms = connection.createStatement();
-                ResultSet rs = ms.executeQuery(sql2);
-                while (rs.next()) {
-                    palabra1.setEsp(rs.getString("verbEsp"));
-                    palabra1.setIng(rs.getString("verbIng"));
-                }
-                rs.close();
-            } catch (SQLException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }
-        return palabra1;
-    }
-
-
-    public long tiempoEstudio(){
-        long tiempo = 0;
-        long voca = 0;
-        String sql = "select tiempoEstudio from estadisticas;";
-        try {
-            Statement ms = this.connection.createStatement();
-            ResultSet rs = ms.executeQuery(sql);
-            while (rs.next()){
-                tiempo = rs.getLong(1);
-            }
-        }catch (SQLException e){
-            System.out.println("Error: "+e.getMessage());
-        }
-        return tiempo;
-    }
-    public long tiempoEstVoca(){
-        long tiempo = 0;
-        String sql = "select tiempoEstVoca from estadisticas;";
-        try {
-            Statement ms = this.connection.createStatement();
-            ResultSet rs = ms.executeQuery(sql);
-            while (rs.next()){
-                tiempo = rs.getLong(1);
-            }
-        }catch (SQLException e){
-            System.out.println("Error: "+e.getMessage());
-        }
-        return tiempo;
-    }
-    public long tiempoEstVerb(){
-        long tiempo = 0;
-        String sql = "select tiempoEstVerb from estadisticas;";
-        try {
-            Statement ms = this.connection.createStatement();
-            ResultSet rs = ms.executeQuery(sql);
-            while (rs.next()){
-                tiempo = rs.getLong(1);
-            }
-        }catch (SQLException e){
-            System.out.println("Errord: "+e.getMessage());
-        }
-        return tiempo;
-    }
-    public void insertarTiempo(long tiempo, long voca, long verb){
-        String sql = "update estadisticas set tiempoEstudio = "+tiempo+";";
-        try {
-            Statement ms = this.connection.createStatement();
-            ms.executeUpdate(sql);
-            ms.close();
-        }catch (SQLException e){
-            System.out.println("Error  "+e.getMessage());
-        }
-        String sql2 = "update estadisticas set tiempoEstVoca = "+voca+";";
-        try {
-            Statement ms = this.connection.createStatement();
-            ms.executeUpdate(sql2);
-            ms.close();
-        }catch (SQLException e){
-            System.out.println("Error"+e.getMessage());
-        }
-        String sql3 = "update estadisticas set tiempoEstVerb = "+verb+";";
-        try {
-            Statement ms = this.connection.createStatement();
-            ms.executeUpdate(sql3);
-            ms.close();
-        }catch (SQLException e){
-            System.out.println("Errorr"+e.getMessage());
-        }
     }
 
     public boolean existePesp(String palabra){
@@ -222,20 +80,6 @@ public class BDController {
             existePalabra.setString(1,palabra);
             existePalabra.setString(2,palabra);
             ResultSet rs = existePalabra.executeQuery();
-            if (!rs.first()){
-                existe = false;
-            }
-        }catch (SQLException e){
-            System.out.println("Error: "+e.getMessage());
-        }
-        return existe;
-    }
-    public boolean existeVerbo(String palabra){
-        boolean existe = true;
-        try {
-            existeVerbo.setString(1,palabra);
-            existeVerbo.setString(2,palabra);
-            ResultSet rs = existeVerbo.executeQuery();
             if (!rs.first()){
                 existe = false;
             }
