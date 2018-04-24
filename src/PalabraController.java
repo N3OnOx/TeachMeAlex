@@ -136,53 +136,63 @@ public class PalabraController {
         long time;
         long voca;
         long verb;
+        boolean check = true;
         time_start = System.currentTimeMillis();
         for (Palabra palabra : this.palabraController.palabrasRandom()) {
             System.out.println("Español --> "+palabra.getEsp());
             System.out.print("English --> ");
             resp = sc.nextLine();
-            if (!resp.equalsIgnoreCase(palabra.getIng())){
-                System.out.println("¡¡¡ERROR!!! Ingles --> "+palabra.getIng());
-                contFallos++;
-                fallos.add(palabra);
+            if (!resp.equalsIgnoreCase("-1")) {
+                if (!resp.equalsIgnoreCase(palabra.getIng())) {
+                    System.out.println("¡¡¡ERROR!!! Ingles --> " + palabra.getIng());
+                    contFallos++;
+                    fallos.add(palabra);
+                }
+            }else{
+                System.out.println("Hasta luego");
+                time_end = System.currentTimeMillis();
+                check = false;
+                break;
             }
         }
-        if (contFallos == 0){
-            System.out.println("ENHORABUENA, TODO ACERTADO A LA PRIMERA!!! SIGUE ASÍ!!");
-            time_end = System.currentTimeMillis();
-        }else{
-            System.out.println("Tiene "+contFallos+" fallos. Desea repetir sus fallos?");
-            resp = sc.nextLine();
-            if (resp.equalsIgnoreCase("si")){
-                do {
-                    contFallos = 0;
-                    for (Palabra fallo : fallos) {
-                        System.out.println("Español --> "+fallo.getEsp());
-                        System.out.print("English --> ");
-                        resp = sc.nextLine();
-                        if (!resp.equalsIgnoreCase(fallo.getIng())){
-                            System.out.println("¡¡¡ERROR!!! Ingles --> "+fallo.getIng());
-                            contFallos++;
-                        }
-                    }
-                    if (contFallos != 0){
-                        System.out.println("Sigue teniendo fallos, seguimos intentandolo?");
-                        resp = sc.nextLine();
-                        if (!resp.equalsIgnoreCase("si")){
-                            System.out.println("Hasta otra!");
-                            time_end = System.currentTimeMillis();
-                            contFallos = 0;
-                            checkFallos = false;
-                        }
-                    }
-                }while (contFallos != 0);
-               if (checkFallos){
-                   System.out.println("Enhorabuena, hemos mitigado los fallos");
-                   time_end = System.currentTimeMillis();
-               }
-            }else{
-                System.out.println("Hasta otra!");
+        if (check) {
+            if (contFallos == 0) {
+                System.out.println("ENHORABUENA, TODO ACERTADO A LA PRIMERA!!! SIGUE ASÍ!!");
                 time_end = System.currentTimeMillis();
+            } else {
+                System.out.println("Tiene " + contFallos + " fallos. Desea repetir sus fallos?");
+                resp = sc.nextLine();
+                if (resp.equalsIgnoreCase("si")) {
+                    do {
+                        contFallos = 0;
+                        for (Palabra fallo : fallos) {
+                            System.out.println("Español --> " + fallo.getEsp());
+                            System.out.print("English --> ");
+                            resp = sc.nextLine();
+                            if (!resp.equalsIgnoreCase(fallo.getIng())) {
+                                System.out.println("¡¡¡ERROR!!! Ingles --> " + fallo.getIng());
+                                contFallos++;
+                            }
+                        }
+                        if (contFallos != 0) {
+                            System.out.println("Sigue teniendo fallos, seguimos intentandolo?");
+                            resp = sc.nextLine();
+                            if (!resp.equalsIgnoreCase("si")) {
+                                System.out.println("Hasta otra!");
+                                time_end = System.currentTimeMillis();
+                                contFallos = 0;
+                                checkFallos = false;
+                            }
+                        }
+                    } while (contFallos != 0);
+                    if (checkFallos) {
+                        System.out.println("Enhorabuena, hemos mitigado los fallos");
+                        time_end = System.currentTimeMillis();
+                    }
+                } else {
+                    System.out.println("Hasta otra!");
+                    time_end = System.currentTimeMillis();
+                }
             }
         }
         time = palabraController.tiempoEstudio() + (( time_end - time_start )/1000);
@@ -201,68 +211,78 @@ public class PalabraController {
         long time;
         long voca;
         long verb;
+        boolean check = true;
         time_start = System.currentTimeMillis();
         for (Verbo verbo : this.palabraController.verbosRandom()) {
             System.out.println("Verbo --> "+verbo.getVerb());
             System.out.print("Present --> ");
             resp = sc.nextLine();
-            if (!resp.equalsIgnoreCase(verbo.getPresent())){
-                System.out.println("¡¡¡ERROR!!! Present --> "+verbo.getPresent());
-                contFallos++;
-                fallos.add(verbo);
-            }else{
-                System.out.println("Past --> ");
-                resp = sc.nextLine();
-                if (!resp.equalsIgnoreCase(verbo.getPast())){
-                    System.out.println("¡¡¡ERROR!!! Past --> "+verbo.getPast());
+            if (!resp.equalsIgnoreCase("-1")) {
+                if (!resp.equalsIgnoreCase(verbo.getPresent())) {
+                    System.out.println("¡¡¡ERROR!!! Present --> " + verbo.getPresent());
                     contFallos++;
                     fallos.add(verbo);
+                } else {
+                    System.out.println("Past --> ");
+                    resp = sc.nextLine();
+                    if (!resp.equalsIgnoreCase(verbo.getPast())) {
+                        System.out.println("¡¡¡ERROR!!! Past --> " + verbo.getPast());
+                        contFallos++;
+                        fallos.add(verbo);
+                    }
                 }
+            }else{
+                System.out.println("Hasta luego!");
+                time_end = System.currentTimeMillis();
+                check = false;
+                break;
             }
         }
-        if (contFallos == 0){
-            System.out.println("ENHORABUENA, TODO ACERTADO A LA PRIMERA!!!! SIGUE ASÍ!!");
-            time_end = System.currentTimeMillis();
-        }else{
-            System.out.println("Tiene "+contFallos+" fallos. Desea repetir sus fallos?");
-            resp = sc.nextLine();
-            if (resp.equalsIgnoreCase("si")){
-                do {
-                    contFallos = 0;
-                    for (Verbo fallo : fallos) {
-                        System.out.println("Verbo ---> " + fallo.getVerb());
-                        System.out.print("Present ---> ");
-                        resp = sc.nextLine();
-                        if (!resp.equalsIgnoreCase(fallo.getPresent())) {
-                            System.out.println("¡¡¡ERROR!!! Present --> " + fallo.getPresent());
-                            contFallos++;
-                        } else {
-                            System.out.print("Past ---> ");
+        if (check) {
+            if (contFallos == 0) {
+                System.out.println("ENHORABUENA, TODO ACERTADO A LA PRIMERA!!!! SIGUE ASÍ!!");
+                time_end = System.currentTimeMillis();
+            } else {
+                System.out.println("Tiene " + contFallos + " fallos. Desea repetir sus fallos?");
+                resp = sc.nextLine();
+                if (resp.equalsIgnoreCase("si")) {
+                    do {
+                        contFallos = 0;
+                        for (Verbo fallo : fallos) {
+                            System.out.println("Verbo ---> " + fallo.getVerb());
+                            System.out.print("Present ---> ");
                             resp = sc.nextLine();
-                            if (!resp.equalsIgnoreCase(fallo.getPast())) {
-                                System.out.println("¡¡¡ERROR!!! Past --> " + fallo.getPast());
+                            if (!resp.equalsIgnoreCase(fallo.getPresent())) {
+                                System.out.println("¡¡¡ERROR!!! Present --> " + fallo.getPresent());
                                 contFallos++;
+                            } else {
+                                System.out.print("Past ---> ");
+                                resp = sc.nextLine();
+                                if (!resp.equalsIgnoreCase(fallo.getPast())) {
+                                    System.out.println("¡¡¡ERROR!!! Past --> " + fallo.getPast());
+                                    contFallos++;
+                                }
                             }
                         }
-                    }
-                    if (contFallos != 0){
-                        System.out.println("Sigue teniendo fallos, seguimos intentandolo ?");
-                        resp = sc.nextLine();
-                        if (!resp.equalsIgnoreCase("si")){
-                            System.out.println("Hasta otra!!");
-                            time_end = System.currentTimeMillis();
-                            contFallos = 0;
-                            checkFallos = false;
+                        if (contFallos != 0) {
+                            System.out.println("Sigue teniendo fallos, seguimos intentandolo ?");
+                            resp = sc.nextLine();
+                            if (!resp.equalsIgnoreCase("si")) {
+                                System.out.println("Hasta otra!!");
+                                time_end = System.currentTimeMillis();
+                                contFallos = 0;
+                                checkFallos = false;
+                            }
                         }
+                    } while (contFallos != 0);
+                    if (checkFallos) {
+                        System.out.println("Enhorabuena, hemos mitigado los fallos");
+                        time_end = System.currentTimeMillis();
                     }
-                }while (contFallos != 0);
-               if (checkFallos){
-                   System.out.println("Enhorabuena, hemos mitigado los fallos");
-                   time_end = System.currentTimeMillis();
-               }
-            }else{
-                System.out.println("Hasta otra!");
-                time_end = System.currentTimeMillis();
+                } else {
+                    System.out.println("Hasta otra!");
+                    time_end = System.currentTimeMillis();
+                }
             }
         }
         time = palabraController.tiempoEstudio() + (( time_end - time_start )/1000);
